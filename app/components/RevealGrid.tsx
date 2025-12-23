@@ -20,7 +20,7 @@ export default function RevealGrid({
           },
         },
       }}
-      className="grid md:grid-cols-3 gap-6"
+      className="grid md:grid-cols-2 gap-6"
     >
       {children}
     </motion.div>

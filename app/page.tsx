@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
-import Photos from "./home/Photos";
+import Photos from "@/home/Photos";
+import Cast from "@/home/Cast";
 
 export default function HomePage() {
   return (
@@ -28,7 +29,10 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+
       <Photos />
+
+      <Cast />
     </main>
   );
 }
