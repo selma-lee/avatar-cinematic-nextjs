@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="relative z-10 flex h-full items-center justify-center text-center px-6">
           <Reveal>
             <h1 className="text-5xl md:text-7xl font-bold tracking-wide">
-              AVATAR CINEMATIC EXPERIENCE
+              AVATAR: FIRE AND ASH
             </h1>
             <p className="mt-6 text-lg text-gray-200 max-w-2xl mx-auto">
               A cinematic, scroll-driven experience built with Next.js

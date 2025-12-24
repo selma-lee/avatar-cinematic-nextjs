@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Avatar Cinematic Experience",
+  title: "AVATAR: FIRE AND ASH",
   description: "A Next.js cinematic, scroll-driven movie introduction website",
 };
 
