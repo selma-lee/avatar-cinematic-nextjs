@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -16,54 +16,91 @@ export default function CinematicCarousel({
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [isHovered, setIsHovered] = useState(false);
+  const [animating, setAnimating] = useState(false);
+
+  const controls = useAnimation();
 
   const count = photos.length;
   const prevIndex = (index - 1 + count) % count;
   const nextIndex = (index + 1) % count;
 
+  // Positions tuned to your existing layout
+  const CENTER = "-26%";
+  const NEXT = "-59%"; // track moved left to show "next" centered
+  const PREV = "7%"; // track moved right to show "prev" centered
+
+  // keep autoplay timer (pause on hover)
+  // useEffect(() => {
+  //   if (isHovered || animating) return;
+
+  //   const timer = setInterval(() => {
+  //     handleSlide(1);
+  //   }, autoPlayInterval);
+
+  //   return () => clearInterval(timer);
+  // }, [isHovered, autoPlayInterval, index, animating]);
+
+  // set initial position to center on mount
   useEffect(() => {
-    if (isHovered) return;
+    controls.set({ x: CENTER });
+  }, [controls]);
 
-    const timer = setInterval(() => {
-      slide(1);
-    }, autoPlayInterval);
-
-    return () => clearInterval(timer);
-  }, [isHovered, autoPlayInterval, index]);
-
-  const slide = (dir: 1 | -1) => {
+  const handleSlide = async (dir: 1 | -1) => {
+    if (animating) return;
+    setAnimating(true);
     setDirection(dir);
+
+    // decide target
+    const target = dir === 1 ? NEXT : PREV;
+
+    // animate to target (shows next/prev)
+    await controls.start({
+      x: target,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    });
+
+    // update logical index AFTER animation finishes
     setIndex((i) => (i + dir + count) % count);
+
+    // snap back to center instantly (no transition) so DOM remains stable
+    controls.set({ x: CENTER });
+
+    // small timeout to ensure any rendering is settled before allowing another animation
+    // (optional, you can tune or remove)
+    setTimeout(() => {
+      setAnimating(false);
+    }, 20);
   };
 
   return (
     <>
       <div className="relative mx-auto h-[35vh] md:h-[60vh] max-w-6xl overflow-hidden">
-        {/* Track */}
+        {/* Track (single persistent element) */}
         <motion.div
-          key={index}
-          initial={{ x: direction === 1 ? "7%" : "-59%" }}
-          animate={{ x: "-26%" }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          animate={controls}
           className="absolute top-0 left-0 flex w-[210%] h-full"
         >
           {/* Previous */}
           <div className="relative w-1/3 h-full flex items-center justify-center">
-            <Image
-              src={photos[prevIndex]}
-              alt="Previous"
-              fill
-              className="object-cover rounded-xl opacity-40 scale-95"
-            />
+            <div className="relative w-full h-full opacity-40 scale-95">
+              <Image
+                src={photos[prevIndex]}
+                alt="Previous"
+                fill
+                loading="eager"
+                className="object-cover rounded-xl"
+              />
+            </div>
           </div>
 
           {/* Current */}
           <div className="relative w-1/3 h-full flex items-center justify-center">
             <motion.div
-              animate={{ scale: isHovered ? 1.1 : 1 }}
-              transition={{ duration: 0.3 }}
+              animate={{ scale: isHovered ? 1.06 : 1 }}
+              transition={{ duration: 0.25 }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
+              onTouchEnd={() => setIsHovered(false)}
               className="relative w-full h-full z-10"
             >
               <Image
@@ -78,26 +115,31 @@ export default function CinematicCarousel({
 
           {/* Next */}
           <div className="relative w-1/3 h-full flex items-center justify-center">
-            <Image
-              src={photos[nextIndex]}
-              alt="Next"
-              fill
-              className="object-cover rounded-xl opacity-40 scale-95"
-            />
+            <div className="relative w-full h-full opacity-40 scale-95">
+              <Image
+                src={photos[nextIndex]}
+                alt="Next"
+                fill
+                loading="eager"
+                className="object-cover rounded-xl"
+              />
+            </div>
           </div>
         </motion.div>
 
         {/* Controls */}
         <button
-          onClick={() => slide(-1)}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white p-3 rounded-full cursor-pointer"
+          onClick={() => handleSlide(-1)}
+          disabled={animating}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white p-3 rounded-full cursor-pointer disabled:opacity-50"
         >
           ‹
         </button>
 
         <button
-          onClick={() => slide(1)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white p-3 rounded-full cursor-pointer"
+          onClick={() => handleSlide(1)}
+          disabled={animating}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white p-3 rounded-full cursor-pointer disabled:opacity-50"
         >
           ›
         </button>
@@ -109,8 +151,8 @@ export default function CinematicCarousel({
           <button
             key={i}
             onClick={() => {
-              setDirection(i > index ? 1 : -1);
-              setIndex(i);
+              if (i === index || animating) return;
+              handleSlide(i > index ? 1 : -1);
             }}
             className={`w-2 h-2 rounded-full cursor-pointer ${
               i === index ? "bg-white" : "bg-gray-500"
