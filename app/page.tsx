@@ -1,7 +1,3 @@
-import HomePage from "./index/page";
+import HomePage from "@/index/page";
 
-export default function Page() {
-  return (
-    <HomePage />
-  );
-}
+export default HomePage;

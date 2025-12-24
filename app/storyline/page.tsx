@@ -32,7 +32,18 @@ const ACTS = [
 export default function StorylinePage() {
   return (
     <main className="bg-black text-white">
-      <section>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/image/movies/avatar-bg.webp"
+            alt="Pandora hero"
+            fill
+            className="object-cover opacity-40"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
+        </div>
+
         <div className="relative z-10 max-w-5xl mx-auto px-6 py-28 md:py-40 text-center">
           <Reveal>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
@@ -91,8 +102,7 @@ export default function StorylinePage() {
               "Pandora isn't only a place you visit — it's a life you join."
             </blockquote>
             <p className="mt-6 text-sm text-neutral-400">
-              The story continues — new tribes, new conflicts, and the enduring bond
-              between family and world.
+              The story continues — new tribes, new conflicts, and the enduring bond between family and world.
             </p>
           </Reveal>
         </div>

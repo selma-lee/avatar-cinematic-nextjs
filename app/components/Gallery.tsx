@@ -11,7 +11,7 @@ type Props = {
 
 export default function CinematicCarousel({
   photos,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 4000,
 }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
@@ -38,7 +38,7 @@ export default function CinematicCarousel({
 
   return (
     <>
-      <div className="relative mx-auto h-[40vh] md:h-[60vh] max-w-6xl overflow-hidden">
+      <div className="relative mx-auto h-[35vh] md:h-[60vh] max-w-6xl overflow-hidden">
         {/* Track */}
         <motion.div
           key={index}
