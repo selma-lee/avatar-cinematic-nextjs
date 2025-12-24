@@ -30,15 +30,15 @@ export default function CinematicCarousel({
   const PREV = "7%"; // track moved right to show "prev" centered
 
   // keep autoplay timer (pause on hover)
-  // useEffect(() => {
-  //   if (isHovered || animating) return;
+  useEffect(() => {
+    if (isHovered || animating) return;
 
-  //   const timer = setInterval(() => {
-  //     handleSlide(1);
-  //   }, autoPlayInterval);
+    const timer = setInterval(() => {
+      handleSlide(1);
+    }, autoPlayInterval);
 
-  //   return () => clearInterval(timer);
-  // }, [isHovered, autoPlayInterval, index, animating]);
+    return () => clearInterval(timer);
+  }, [isHovered, autoPlayInterval, index, animating]);
 
   // set initial position to center on mount
   useEffect(() => {
