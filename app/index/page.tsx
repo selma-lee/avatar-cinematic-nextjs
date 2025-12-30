@@ -2,21 +2,20 @@ import Reveal from "@/components/Reveal";
 import Photos from "@/index/Photos";
 import Cast from "@/index/Cast";
 import Link from "next/link";
+import ResponsiveVideo from "@/components/ResponsiveVideo";
 
 export default function HomePage() {
   return (
     <main className="bg-black text-white">
       <section className="relative h-screen overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full object-cover opacity-70"
-          style={{height: "135%", top: "-17%"}}
-        >
-          <source src="/video/1080-trailer.mp4" type="video/mp4" />
-        </video>
+        <ResponsiveVideo
+          desktopSrc="/video/trailer-30s.mp4"
+          mobileSrc="/video/trailer-19s.mp4"
+          poster="/image/pandora/4.jpg"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          style={{ height: "140%", top: "-20%" }}
+        />
+        <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
 
         <div className="relative z-10 flex h-full items-center justify-center text-center px-6">
           <Reveal>

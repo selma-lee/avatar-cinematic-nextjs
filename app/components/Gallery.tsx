@@ -40,28 +40,22 @@ export default function CinematicCarousel({
   }, [isHovered, autoPlayInterval, index, animating]);
 
   const handleSlide = async (dir: 1 | -1) => {
-    if (animating) return;
+    if (animating) {
+      return;
+    }
+
     setAnimating(true);
-
-    // decide target
     const target = dir === 1 ? NEXT : PREV;
-
     // animate to target (shows next/prev)
     await controls.start({
       x: target,
       transition: { duration: 0.6, ease: "easeInOut" },
     });
-
     // update logical index AFTER animation finishes
     setIndex((i) => (i + dir + count) % count);
-
     // snap back to center instantly (no transition) so DOM remains stable
     controls.set({ x: CENTER });
-
-    // small timeout to ensure any rendering is settled before allowing another animation
-    setTimeout(() => {
-      setAnimating(false);
-    }, 25);
+    setAnimating(false);
   };
 
   return (
