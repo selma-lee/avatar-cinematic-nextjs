@@ -20,10 +20,11 @@ export default function Reveal({ children }: RevealProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 80 }}
+      initial={{ opacity: 0.2, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: false, margin: "-100px" }}
       transition={{ duration: 0.8, ease: "easeOut" }}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.div>
