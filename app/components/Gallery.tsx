@@ -14,7 +14,6 @@ export default function CinematicCarousel({
   autoPlayInterval = 4000,
 }: Props) {
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
   const [isHovered, setIsHovered] = useState(false);
   const [animating, setAnimating] = useState(false);
 
@@ -40,15 +39,9 @@ export default function CinematicCarousel({
     return () => clearInterval(timer);
   }, [isHovered, autoPlayInterval, index, animating]);
 
-  // set initial position to center on mount
-  useEffect(() => {
-    controls.set({ x: CENTER });
-  }, [controls]);
-
   const handleSlide = async (dir: 1 | -1) => {
     if (animating) return;
     setAnimating(true);
-    setDirection(dir);
 
     // decide target
     const target = dir === 1 ? NEXT : PREV;
@@ -66,10 +59,9 @@ export default function CinematicCarousel({
     controls.set({ x: CENTER });
 
     // small timeout to ensure any rendering is settled before allowing another animation
-    // (optional, you can tune or remove)
     setTimeout(() => {
       setAnimating(false);
-    }, 20);
+    }, 25);
   };
 
   return (
@@ -77,6 +69,7 @@ export default function CinematicCarousel({
       <div className="relative mx-auto h-[35vh] md:h-[60vh] max-w-6xl overflow-hidden">
         {/* Track (single persistent element) */}
         <motion.div
+          initial={{ x: CENTER }}
           animate={controls}
           className="absolute top-0 left-0 flex w-[210%] h-full"
         >
